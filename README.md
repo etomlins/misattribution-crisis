@@ -92,7 +92,13 @@ Everything is managed in Supabase's **Table Editor**. Changes show up on the sit
 | `sources` | Links per entry: `evidence` (backs the finding) or `spreading` (repeats the misquote) |
 | `submissions` | What visitors send. Private. |
 
-The five verdicts are `misattributed`, `paraphrased`, `borrowed`, `unverified` and `accurate`. Their public definitions are in `src/lib/verdicts.ts`.
+The four verdicts are `misattributed`, `paraphrased`, `unverified` and `accurate`. Their public definitions are in `src/lib/verdicts.ts`.
+
+### Updating an existing database
+
+When the schema changes after you've set up Supabase, the change comes as a numbered file in `db/migrations/`. Paste it into the Supabase SQL editor and run it once. Each file is a single transaction: it either fully applies or changes nothing.
+
+- `001-remove-borrowed-verdict.sql`: removes the Borrowed verdict and moves the Newton entry to Accurate.
 
 ---
 

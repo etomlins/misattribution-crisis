@@ -2,7 +2,7 @@
 // `npm run db:setup` loads this into an empty database.
 // After launch, edit entries in Supabase instead; this file is only for seeding.
 //
-// verdicts: misattributed | paraphrased | borrowed | unverified | accurate
+// verdicts: misattributed | paraphrased | unverified | accurate
 // status:   published (shows on the site) | draft (hidden, still investigating)
 
 export type SeedSource = { kind: "evidence" | "spreading"; label: string; url?: string };
@@ -10,7 +10,7 @@ export type SeedSource = { kind: "evidence" | "spreading"; label: string; url?: 
 export type SeedEntry = {
   quote: string;
   credited: string[];
-  verdict: "misattributed" | "paraphrased" | "borrowed" | "unverified" | "accurate";
+  verdict: "misattributed" | "paraphrased" | "unverified" | "accurate";
   status: "published" | "draft";
   actualAuthor?: string;
   earliestKnown?: string;
@@ -295,9 +295,9 @@ export const seedEntries: SeedEntry[] = [
   {
     quote: "Standing on the shoulders of giants.",
     credited: ["Isaac Newton"],
-    verdict: "borrowed",
+    verdict: "accurate",
     status: "published",
-    actualAuthor: "Bernard of Chartres",
+    actualAuthor: "Isaac Newton",
     earliestKnown: "12th century",
     findings:
       "The concept has been dated to the 12th century and, according to John of Salisbury, is attributable to Bernard of Chartres.\n\nGoodreads attributes it to The Correspondence of Isaac Newton: Volume 5, 1709–1713, but upon inspection of a PDF copy of the work, it is not there.",

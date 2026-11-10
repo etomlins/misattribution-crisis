@@ -46,17 +46,10 @@ function creditLine(entry: EntrySummary) {
       </>
     );
   }
-  if ((entry.verdict === "paraphrased" || entry.verdict === "borrowed") && entry.originalText) {
+  if (entry.verdict === "paraphrased" && entry.originalText) {
     return (
       <>
         Credited to <strong>{credited}</strong> · The original: “{entry.originalText}”
-      </>
-    );
-  }
-  if (entry.verdict === "borrowed" && entry.actualAuthor) {
-    return (
-      <>
-        Credited to <strong>{credited}</strong> · Older than that: <strong>{entry.actualAuthor}</strong>
       </>
     );
   }

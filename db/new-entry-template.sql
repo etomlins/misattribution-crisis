@@ -2,7 +2,7 @@
 -- fill in the values, and run. Everything happens in one go, so a typo
 -- won't leave a half-made entry behind.
 --
--- Verdicts: misattributed | paraphrased | borrowed | unverified | accurate
+-- Verdicts: misattributed | paraphrased | unverified | accurate
 -- Use status 'draft' to save it without publishing.
 -- In SQL, write an apostrophe inside text as two: 'don''t'. Or use curly ’ quotes.
 

@@ -48,7 +48,7 @@ async function EntryContent({ params }: { params: PageProps<"/q/[slug]">["params
 
   const facts = [
     { label: "Credited to", value: joinNames(entry.credited) },
-    { label: entry.verdict === "borrowed" ? "Older source" : "Actually said by", value: entry.actualAuthor ?? "Unknown" },
+    { label: "Actually said by", value: entry.actualAuthor ?? "Unknown" },
     entry.earliestKnown ? { label: "Earliest known", value: entry.earliestKnown } : null,
     entry.firstAttributed && firstPerson
       ? { label: `First tied to ${firstPerson.name.split(" ").at(-1)}`, value: entry.firstAttributed }

@@ -5,7 +5,7 @@
 -- Supabase's public API (anon key) can't read or write anything. Only the
 -- site's own server, connecting with the database password, can.
 
-create type verdict as enum ('misattributed', 'paraphrased', 'borrowed', 'unverified', 'accurate');
+create type verdict as enum ('misattributed', 'paraphrased', 'unverified', 'accurate');
 create type entry_status as enum ('draft', 'published');
 create type source_kind as enum ('evidence', 'spreading');
 create type submission_status as enum ('pending', 'approved', 'rejected');
