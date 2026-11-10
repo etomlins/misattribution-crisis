@@ -2,7 +2,9 @@
 
 import { createHash } from "node:crypto";
 import { headers } from "next/headers";
+import { after } from "next/server";
 import { getSql } from "@/lib/db";
+import { notifyNewSubmission } from "@/lib/notify";
 
 export type SubmitValues = {
   quote: string;
@@ -104,7 +106,7 @@ export async function submitMisquote(_prev: SubmitState, formData: FormData): Pr
 
   // 5. Save as pending. Nothing is published until it's reviewed.
   const notes = correction ? `Correction for /q/${correction}\n\n${values.notes}`.trim() : values.notes;
-  await sql`
+  const [saved] = await sql<{ id: number }[]>`
     insert into submissions ${sql({
       quote: values.quote,
       credited_to: values.creditedTo,
@@ -116,7 +118,11 @@ export async function submitMisquote(_prev: SubmitState, formData: FormData): Pr
       credit_name: values.creditName || null,
       ip_hash: ipHash,
     })}
+    returning id::int as id
   `;
+
+  // 6. Email Ellen, after the visitor's response has been sent.
+  after(() => notifyNewSubmission({ id: saved.id, ...values, notes }));
 
   return { status: "success" };
 }

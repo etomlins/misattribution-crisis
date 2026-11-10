@@ -64,7 +64,14 @@ In the Cloudflare dashboard, add a Turnstile widget for your domain (and `localh
 
 If the Turnstile secret is missing on the live site, the form refuses all submissions rather than letting unchecked ones through.
 
-### 4. Domain
+### 4. Email alerts for new submissions (optional)
+
+1. Sign up at resend.com with the email address you want alerts sent to, and create an API key.
+2. In Vercel, add `RESEND_API_KEY` (the key) and `NOTIFY_EMAIL` (your address), then redeploy.
+
+Each new submission then emails you the quote, credit and evidence. Hitting Reply goes to the submitter, if they left an email. Until you verify your own domain in Resend, alerts come from Resend's test sender, which can only email the address you signed up with. That's fine, since that's you. If an email ever fails, the submission is still saved; check the `submissions` table.
+
+### 5. Domain
 
 Buy a domain and add it under the Vercel project's Domains settings. Then update `NEXT_PUBLIC_SITE_URL`.
 
@@ -74,7 +81,7 @@ Buy a domain and add it under the Vercel project's Domains settings. Then update
 
 Everything is managed in Supabase's **Table Editor**. Changes show up on the site immediately; there's nothing to rebuild.
 
-**Reviewing submissions.** Open the `submissions` table and filter `status = pending`. For each one, either write it up as an entry and set the submission's status to `approved`, or set it to `rejected`. Submissions are never shown publicly.
+**Reviewing submissions.** If email alerts are on, you get an email for each one. Open the `submissions` table and filter `status = pending`. For each one, either write it up as an entry and set the submission's status to `approved`, or set it to `rejected`. Submissions are never shown publicly.
 
 **Publishing an entry.** The easiest way is `db/new-entry-template.sql`: paste it into the SQL editor, fill in the values, run. It creates the entry, the people it's credited to, and its sources in one step. Use status `draft` to save without publishing.
 
@@ -137,4 +144,3 @@ src/app/globals.css        all the styling
 ## Notes for later
 
 - Pages read the database on every request, so edits are instant. If traffic ever grows, the reads in `src/lib/data.ts` can be cached with Next.js's `'use cache'` directive.
-- An email alert for new submissions (Resend or similar) would go at the end of `submitMisquote` in `src/app/submit/actions.ts`.
