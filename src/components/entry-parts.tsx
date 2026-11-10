@@ -3,7 +3,11 @@ import type { EntrySummary, PersonRef } from "@/lib/data";
 import { VERDICT_INFO, type Verdict } from "@/lib/verdicts";
 
 export function VerdictBadge({ verdict, large = false }: { verdict: Verdict; large?: boolean }) {
-  return <span className={large ? "badge badge-lg" : "badge"}>{VERDICT_INFO[verdict].label}</span>;
+  return (
+    <span className={large ? "badge badge-lg" : "badge"} data-verdict={verdict}>
+      {VERDICT_INFO[verdict].label}
+    </span>
+  );
 }
 
 export function formatDate(date: Date) {

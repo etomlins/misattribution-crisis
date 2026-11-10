@@ -1,3 +1,4 @@
+import { VerdictBadge } from "@/components/entry-parts";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { VERDICT_INFO, VERDICTS } from "@/lib/verdicts";
@@ -27,7 +28,7 @@ export default function HowIVerifyPage() {
           {VERDICTS.map((v) => (
             <div key={v}>
               <dt>
-                <span className="badge">{VERDICT_INFO[v].label}</span>
+                <VerdictBadge verdict={v} />
               </dt>
               <dd>{VERDICT_INFO[v].meaning}</dd>
             </div>

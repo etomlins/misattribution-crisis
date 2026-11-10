@@ -137,6 +137,17 @@ input:focus, textarea:focus, select:focus { border-color: var(--ink); outline: 2
 }
 .badge-lg { padding: 4px 10px; font-size: 13px; border-color: var(--ink); }
 
+/* Verdict colors: dark text on a light tint, all at least 5.8:1 contrast. */
+[data-verdict="misattributed"] { --v-ink: #9b1c1c; --v-tint: #fdecec; --v-line: #e7a3a3; }
+[data-verdict="paraphrased"]   { --v-ink: #8a4b00; --v-tint: #fdf1e0; --v-line: #e8c28a; }
+[data-verdict="contested"]     { --v-ink: #5b2a86; --v-tint: #f3ecfa; --v-line: #c9b0e3; }
+[data-verdict="unverified"]    { --v-ink: #4a4a4a; --v-tint: #f1f1f1; --v-line: #bdbdbd; }
+[data-verdict="accurate"]      { --v-ink: #1d6b35; --v-tint: #e8f5ec; --v-line: #9fd0ad; }
+.badge[data-verdict] { color: var(--v-ink); background: var(--v-tint); border-color: var(--v-line); }
+.badge-lg[data-verdict] { border-color: var(--v-ink); }
+.verdict-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 7px; vertical-align: 1px; background: var(--v-ink); }
+.pill[aria-current="true"] .verdict-dot { box-shadow: 0 0 0 1.5px var(--paper); }
+
 /* ---------- entry lists ---------- */
 
 .entry-list { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--rule); }

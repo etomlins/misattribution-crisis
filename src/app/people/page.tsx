@@ -55,6 +55,7 @@ async function PeopleContent({ searchParams }: { searchParams: PageProps<"/peopl
           </Link>
           {VERDICTS.map((v) => (
             <Link key={v} href={hrefFor(v, sort)} className="pill" aria-current={verdict === v ? "true" : undefined}>
+              <span className="verdict-dot" data-verdict={v} aria-hidden="true" />
               {VERDICT_INFO[v].label}
             </Link>
           ))}
