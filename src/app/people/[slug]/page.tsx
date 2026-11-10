@@ -5,6 +5,13 @@ import { Suspense } from "react";
 import { EntryList, SubmitCallout } from "@/components/entry-parts";
 import { getPerson } from "@/lib/data";
 
+// "1 quote credited to A.A. Milne that doesn’t hold up." / "5 quotes … that don’t hold up."
+function summaryLine(n: number, name: string) {
+  return n === 1
+    ? `1 quote credited to ${name} that doesn’t hold up.`
+    : `${n} quotes credited to ${name} that don’t hold up.`;
+}
+
 export async function generateMetadata({ params }: PageProps<"/people/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const result = await getPerson(slug);
@@ -12,7 +19,7 @@ export async function generateMetadata({ params }: PageProps<"/people/[slug]">):
   const n = result.entries.length;
   return {
     title: `Misquoted: ${result.person.name}`,
-    description: `${n} ${n === 1 ? "quote" : "quotes"} credited to ${result.person.name} that don’t hold up.`,
+    description: summaryLine(n, result.person.name),
   };
 }
 
@@ -40,7 +47,7 @@ async function PersonContent({ params }: { params: PageProps<"/people/[slug]">["
       <header className="stack gap-8">
         <h1 className="title">{person.name}</h1>
         <p className="lede">
-          {entries.length} {entries.length === 1 ? "quote" : "quotes"} credited to {person.name} that don’t hold up.
+          {summaryLine(entries.length, person.name)}
         </p>
       </header>
       <EntryList entries={entries} />

@@ -74,7 +74,9 @@ async function SearchContent({ searchParams }: { searchParams: PageProps<"/searc
       <p className="muted" aria-live="polite" style={{ fontSize: 15 }}>
         {filtered
           ? `${results.length} ${results.length === 1 ? "result" : "results"}${q ? ` for “${q}”` : ""}`
-          : `All ${results.length} entries, newest first`}
+          : results.length === 1
+            ? "1 entry"
+            : `All ${results.length} entries, newest first`}
       </p>
 
       {results.length > 0 ? <EntryList entries={results} /> : null}
