@@ -2,7 +2,7 @@
 // `npm run db:setup` loads this into an empty database.
 // After launch, edit entries in Supabase instead; this file is only for seeding.
 //
-// verdicts: misattributed | paraphrased | unverified | accurate
+// verdicts: misattributed | paraphrased | contested | unverified | accurate
 // status:   published (shows on the site) | draft (hidden, still investigating)
 
 export type SeedSource = { kind: "evidence" | "spreading"; label: string; url?: string };
@@ -10,7 +10,7 @@ export type SeedSource = { kind: "evidence" | "spreading"; label: string; url?: 
 export type SeedEntry = {
   quote: string;
   credited: string[];
-  verdict: "misattributed" | "paraphrased" | "unverified" | "accurate";
+  verdict: "misattributed" | "paraphrased" | "contested" | "unverified" | "accurate";
   status: "published" | "draft";
   actualAuthor?: string;
   earliestKnown?: string;
@@ -120,7 +120,7 @@ export const seedEntries: SeedEntry[] = [
   {
     quote: "God helps those who help themselves.",
     credited: ["The Bible", "Benjamin Franklin"],
-    verdict: "misattributed",
+    verdict: "contested",
     status: "published",
     actualAuthor: "An ancient Greek proverb",
     findings:
@@ -295,7 +295,7 @@ export const seedEntries: SeedEntry[] = [
   {
     quote: "Standing on the shoulders of giants.",
     credited: ["Isaac Newton"],
-    verdict: "accurate",
+    verdict: "contested",
     status: "published",
     actualAuthor: "Isaac Newton",
     earliestKnown: "12th century",
