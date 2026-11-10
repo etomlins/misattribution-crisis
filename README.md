@@ -24,6 +24,8 @@ npm run dev             # http://localhost:3000
 
 The local database lives in the `.pglite` folder. Delete that folder to start over from the starter entries. Locally the CAPTCHA is off, and the form says so.
 
+To try the admin pages locally, put `ADMIN_PASSWORD=` plus any 12+ character password in `.env.local`, restart `npm run dev`, and go to http://localhost:3000/admin.
+
 ---
 
 ## Going live
@@ -71,7 +73,13 @@ If the Turnstile secret is missing on the live site, the form refuses all submis
 
 Each new submission then emails you the quote, credit and evidence. Hitting Reply goes to the submitter, if they left an email. Until you verify your own domain in Resend, alerts come from Resend's test sender, which can only email the address you signed up with. That's fine, since that's you. If an email ever fails, the submission is still saved; check the `submissions` table.
 
-### 5. Domain
+### 5. Admin password
+
+In Vercel, add `ADMIN_PASSWORD`: a password of at least 12 characters that only you know (a password manager can make one). Redeploy, then log in at `/admin`. Until it's set, `/admin` stays locked.
+
+To log out everywhere (say you logged in on a shared computer), change `ADMIN_PASSWORD` and redeploy. Every existing login stops working.
+
+### 6. Domain
 
 Buy a domain and add it under the Vercel project's Domains settings. Then update `NEXT_PUBLIC_SITE_URL`.
 
@@ -79,15 +87,21 @@ Buy a domain and add it under the Vercel project's Domains settings. Then update
 
 ## Running the site day to day
 
-Everything is managed in Supabase's **Table Editor**. Changes show up on the site immediately; there's nothing to rebuild.
+Everything is done at **`/admin`** on the live site. Changes show up immediately; there's nothing to rebuild.
 
-**Reviewing submissions.** If email alerts are on, you get an email for each one. Open the `submissions` table and filter `status = pending`. For each one, either write it up as an entry and set the submission's status to `approved`, or set it to `rejected`. Submissions are never shown publicly.
+**Reviewing submissions.** The Inbox lists pending submissions (you also get an email for each one, if alerts are on). Open one to see everything they sent. Then either:
+- **Write up as entry**: opens the entry form already filled in from the submission (quote, who it's credited to, their links, their credit name). Do your research, write your findings, pick a verdict, and save. Saving marks the submission approved.
+- **Reject**: moves it to the Rejected tab. Nothing is deleted, so you can move it back to pending.
 
-**Publishing an entry.** The easiest way is `db/new-entry-template.sql`: paste it into the SQL editor, fill in the values, run. It creates the entry, the people it's credited to, and its sources in one step. Use status `draft` to save without publishing.
+Submissions are never shown publicly.
 
-**Editing.** Change any row in `entries` directly. Its "Updated" date on the site changes automatically.
+**Publishing an entry.** Under Entries, open one (or start a New entry), set Status to **Published** and save. Set it back to **Draft** to take it off the site.
 
-**Drafts.** Your unfinished log items (Voltaire, Marie Antoinette, Disraeli and so on) were loaded as drafts. Set `status` to `published` once you've filled them in.
+**Editing.** Any entry can be edited the same way. Its "Updated" date on the site changes automatically.
+
+**Drafts.** Your unfinished log items (Voltaire, Marie Antoinette, Disraeli and so on) were loaded as drafts. Find them under Entries → Drafts.
+
+Supabase's Table Editor and `db/new-entry-template.sql` still work too, if you ever want to fix something in bulk.
 
 ### How the data fits together
 
@@ -138,6 +152,8 @@ scripts/setup.mts          npm run db:setup  (tables + starter entries)
 scripts/local-db.mts       npm run db:local  (local Postgres)
 src/lib/data.ts            every database read the site does
 src/app/submit/actions.ts  the submit form's server-side checks
+src/app/admin/             the admin pages (inbox, entry editor, login)
+src/lib/admin-data.ts      every database read and write the admin does
 src/app/globals.css        all the styling
 ```
 

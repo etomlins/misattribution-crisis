@@ -225,6 +225,20 @@ input:focus, textarea:focus, select:focus { border-color: var(--ink); outline: 2
 
 .skeleton { color: var(--muted); font-size: 15px; padding: 24px 0; }
 
+/* ---------- admin ---------- */
+
+.admin-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; padding-bottom: 16px; border-bottom: 1px solid var(--rule); font-size: 15px; }
+.admin-nav form { margin: 0; }
+.admin-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; }
+.admin-row > .entry-row { border-bottom: 0; }
+.admin-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.admin-actions form { margin: 0; }
+.badge-draft { border-style: dashed; color: var(--muted); }
+.source-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.source-row > select { flex: 0 0 140px; }
+.source-row > input[type="text"] { flex: 1 1 200px; min-width: 0; }
+.source-row > input[type="url"] { flex: 2 1 260px; min-width: 0; }
+
 @media (max-width: 600px) {
   .title { font-size: 32px; }
   .title-lg { font-size: 34px; }
