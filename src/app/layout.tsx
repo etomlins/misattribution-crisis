@@ -33,7 +33,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main id="main">{children}</main>
         <footer className="site-footer">
           <div className="wrap">
-            <span>© Ellen Tomlins</span>
+            <span>© Clement Samuel</span>
             <nav aria-label="Footer">
               <Link href="/how-i-verify">How I verify</Link>
               <Link href="/submit">Submit</Link>

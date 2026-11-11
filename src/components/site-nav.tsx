@@ -21,7 +21,11 @@ export function NavLinks({ pathname }: { pathname: string | null }) {
           {link.label}
         </Link>
       ))}
-      <Link href="/submit" className="btn-outline" aria-current={isCurrent("/submit") ? "page" : undefined}>
+      <span className="nav-break" aria-hidden="true" />
+      <Link href="/submit" className="nav-cta" aria-current={isCurrent("/submit") ? "page" : undefined}>
+        <span className="nav-cta-mark" aria-hidden="true">
+          “
+        </span>
         Submit a misquote
       </Link>
     </nav>
