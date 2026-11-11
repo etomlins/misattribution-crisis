@@ -90,7 +90,19 @@ p { margin: 0; }
 .hero { display: flex; align-items: flex-end; gap: 40px; }
 .hero-text { flex: 1 1 auto; min-width: 0; }
 .hero-overseer { flex: 0 0 auto; width: 250px; height: auto; margin-bottom: -1px; }
-@media (max-width: 860px) { .hero-overseer { display: none; } }
+/* Narrow screens: Twain sits above the headline and fades into it. The fade is a CSS mask, so the image file is untouched. */
+@media (max-width: 860px) {
+  .hero { flex-direction: column; align-items: stretch; gap: 0; }
+  .hero-text { position: relative; z-index: 1; }
+  .hero-overseer {
+    order: -1;
+    align-self: center;
+    width: min(220px, 60vw);
+    margin-bottom: -96px;
+    -webkit-mask-image: linear-gradient(to bottom, #000 38%, transparent 80%);
+    mask-image: linear-gradient(to bottom, #000 38%, transparent 80%);
+  }
+}
 .heading { font-family: var(--serif); font-weight: 400; font-size: 26px; line-height: 1.25; }
 .lede { font-size: 18px; color: var(--ink-2); max-width: 720px; }
 .body { font-size: 17px; line-height: 1.7; }
