@@ -82,7 +82,9 @@ a:hover { color: #000; }
 .nav-break { display: none; }
 @media (prefers-reduced-motion: reduce) { .site-nav .nav-cta { transition: none; } }
 @media (max-width: 600px) {
-  .site-nav { width: 100%; }
+  .site-header .wrap { justify-content: center; }
+  .site-name { width: 100%; text-align: center; }
+  .site-nav { width: 100%; justify-content: center; }
   .nav-break { display: block; flex-basis: 100%; height: 0; }
   .site-nav .nav-cta { margin: 6px auto 4px; }
 }
