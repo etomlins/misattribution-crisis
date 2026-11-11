@@ -16,8 +16,8 @@ export default function HomePage() {
           over time.
         </p>
         <p className="lede">
-          Help set the record straight. If you come across a quote that doesn’t
-          hold up, <Link href="/submit">send it in with your source</Link>.
+          Please help confront the misattribution crisis by submitting misquotes{" "}
+          <Link href="/submit">here</Link>.
         </p>
         <form
           action="/search"
