@@ -68,18 +68,16 @@ a:hover { color: #000; }
 .site-nav a:hover { text-decoration: underline; }
 .site-nav a[aria-current="page"] { border-bottom: 2px solid var(--ink); }
 
-/* The "Submit a misquote" button: black, with an offset red shadow that presses in when clicked. */
+/* The "Submit a misquote" button: solid black with a serif quotation mark. */
 .site-nav .nav-cta {
   display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 16px 8px 14px;
   background: var(--ink); color: var(--paper); border: 1.5px solid var(--ink);
   font-size: 15px; letter-spacing: 0.01em; text-decoration: none;
-  box-shadow: 4px 4px 0 #9b1c1c;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  transition: background-color 0.12s ease;
 }
-.site-nav .nav-cta:hover { text-decoration: none; transform: translate(-1px, -1px); box-shadow: 6px 6px 0 #9b1c1c; }
-.site-nav .nav-cta:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 #9b1c1c; }
+.site-nav .nav-cta:hover { text-decoration: none; background: #444; border-color: #444; }
 .site-nav .nav-cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
-.site-nav .nav-cta[aria-current="page"] { border-bottom-width: 1.5px; transform: translate(3px, 3px); box-shadow: 1px 1px 0 #9b1c1c; }
+.site-nav .nav-cta[aria-current="page"] { border-bottom-width: 1.5px; }
 .nav-cta-mark { font-family: var(--serif); font-size: 30px; line-height: 0; margin-top: 12px; }
 .nav-break { display: none; }
 @media (prefers-reduced-motion: reduce) { .site-nav .nav-cta { transition: none; } }
