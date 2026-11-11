@@ -57,7 +57,7 @@ In the Cloudflare dashboard, add a Turnstile widget for your domain (and `localh
    | Name | Value |
    |---|---|
    | `DATABASE_URL` | The Supabase transaction pooler string |
-   | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Turnstile site key |
+   | `TURNSTILE_SITE_KEY` | Turnstile site key |
    | `TURNSTILE_SECRET_KEY` | Turnstile secret key |
    | `IP_HASH_SALT` | Any long random string |
    | `NEXT_PUBLIC_SITE_URL` | Your site's address, e.g. `https://yourdomain.com` |

@@ -11,12 +11,22 @@ declare global {
   }
 }
 
-const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
-
 type Prefill = { quote?: string; creditedTo?: string; correction?: string };
 
-export function SubmitForm({ prefill = {} }: { prefill?: Prefill }) {
-  const [state, formAction, pending] = useActionState<SubmitState, FormData>(submitMisquote, { status: "idle" });
+export function SubmitForm({
+  prefill = {},
+  siteKey,
+  placeholder = false,
+}: {
+  prefill?: Prefill;
+  siteKey?: string;
+  /** The brief stand-in shown while the page loads; it never shows the "not set up" notice. */
+  placeholder?: boolean;
+}) {
+  const [state, formAction, pending] = useActionState<SubmitState, FormData>(
+    submitMisquote,
+    { status: "idle" },
+  );
   const captchaRef = useRef<HTMLDivElement>(null);
   const errorRef = useRef<HTMLParagraphElement>(null);
 
@@ -33,8 +43,8 @@ export function SubmitForm({ prefill = {} }: { prefill?: Prefill }) {
       <div className="form-done stack gap-16" role="status">
         <h2 className="heading">Thank you.</h2>
         <p className="body">
-          Your submission is in the queue. If it checks out, it’ll be published as a new entry or added to an existing
-          one.
+          Your submission is in the queue. If it checks out, it’ll be published
+          as a new entry or added to an existing one.
         </p>
         <p>
           <Link href="/">Back to the home page</Link>
@@ -43,10 +53,13 @@ export function SubmitForm({ prefill = {} }: { prefill?: Prefill }) {
     );
   }
 
-  const values: Partial<SubmitValues> = state.status === "error" ? state.values : prefill;
+  const values: Partial<SubmitValues> =
+    state.status === "error" ? state.values : prefill;
   const errors = state.status === "error" ? state.fieldErrors : {};
   const fieldProps = (name: keyof SubmitValues | "consent") =>
-    errors[name] ? { "aria-invalid": true as const, "aria-describedby": `${name}-error` } : {};
+    errors[name]
+      ? { "aria-invalid": true as const, "aria-describedby": `${name}-error` }
+      : {};
   const errorText = (name: keyof SubmitValues | "consent") =>
     errors[name] ? (
       <span id={`${name}-error`} className="error-text">
@@ -56,7 +69,12 @@ export function SubmitForm({ prefill = {} }: { prefill?: Prefill }) {
 
   return (
     <form action={formAction} className="stack gap-24" noValidate>
-      {SITE_KEY ? <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" /> : null}
+      {siteKey ? (
+        <Script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          strategy="afterInteractive"
+        />
+      ) : null}
 
       {state.status === "error" ? (
         <p className="form-error" role="alert" tabIndex={-1} ref={errorRef}>
@@ -68,7 +86,8 @@ export function SubmitForm({ prefill = {} }: { prefill?: Prefill }) {
         <>
           <input type="hidden" name="correction" value={prefill.correction} />
           <p className="panel small">
-            You’re suggesting a correction to an existing entry. Tell me what’s wrong and what your source says.
+            You’re suggesting a correction to an existing entry. Tell me what’s
+            wrong and what your source says.
           </p>
         </>
       ) : null}
@@ -77,7 +96,15 @@ export function SubmitForm({ prefill = {} }: { prefill?: Prefill }) {
         <label htmlFor="quote">
           The quote, as you’ve seen it <span className="hint">(required)</span>
         </label>
-        <textarea id="quote" name="quote" rows={3} className="serif" required defaultValue={values.quote} {...fieldProps("quote")} />
+        <textarea
+          id="quote"
+          name="quote"
+          rows={3}
+          className="serif"
+          required
+          defaultValue={values.quote}
+          {...fieldProps("quote")}
+        />
         {errorText("quote")}
       </div>
 
@@ -101,7 +128,13 @@ export function SubmitForm({ prefill = {} }: { prefill?: Prefill }) {
           <label htmlFor="actualAuthor">
             Who actually said it <span className="hint">(if known)</span>
           </label>
-          <input id="actualAuthor" name="actualAuthor" type="text" defaultValue={values.actualAuthor} {...fieldProps("actualAuthor")} />
+          <input
+            id="actualAuthor"
+            name="actualAuthor"
+            type="text"
+            defaultValue={values.actualAuthor}
+            {...fieldProps("actualAuthor")}
+          />
           {errorText("actualAuthor")}
         </div>
       </div>
@@ -116,11 +149,14 @@ export function SubmitForm({ prefill = {} }: { prefill?: Prefill }) {
           rows={3}
           required
           defaultValue={values.evidence}
-          aria-describedby={errors.evidence ? "evidence-error evidence-help" : "evidence-help"}
+          aria-describedby={
+            errors.evidence ? "evidence-error evidence-help" : "evidence-help"
+          }
           aria-invalid={errors.evidence ? true : undefined}
         />
         <span id="evidence-help" className="help">
-          A link or a citation: book, page, date, archive. Primary sources are best.
+          A link or a citation: book, page, date, archive. Primary sources are
+          best.
         </span>
         {errorText("evidence")}
       </div>
@@ -129,7 +165,14 @@ export function SubmitForm({ prefill = {} }: { prefill?: Prefill }) {
         <label htmlFor="seenAt">
           Where you saw the misquote <span className="hint">(optional)</span>
         </label>
-        <input id="seenAt" name="seenAt" type="url" placeholder="https://" defaultValue={values.seenAt} {...fieldProps("seenAt")} />
+        <input
+          id="seenAt"
+          name="seenAt"
+          type="url"
+          placeholder="https://"
+          defaultValue={values.seenAt}
+          {...fieldProps("seenAt")}
+        />
         {errorText("seenAt")}
       </div>
 
@@ -137,7 +180,13 @@ export function SubmitForm({ prefill = {} }: { prefill?: Prefill }) {
         <label htmlFor="notes">
           Anything else <span className="hint">(optional)</span>
         </label>
-        <textarea id="notes" name="notes" rows={3} defaultValue={values.notes} {...fieldProps("notes")} />
+        <textarea
+          id="notes"
+          name="notes"
+          rows={3}
+          defaultValue={values.notes}
+          {...fieldProps("notes")}
+        />
         {errorText("notes")}
       </div>
 
@@ -151,7 +200,9 @@ export function SubmitForm({ prefill = {} }: { prefill?: Prefill }) {
           type="email"
           autoComplete="email"
           defaultValue={values.email}
-          aria-describedby={errors.email ? "email-error email-help" : "email-help"}
+          aria-describedby={
+            errors.email ? "email-error email-help" : "email-help"
+          }
           aria-invalid={errors.email ? true : undefined}
         />
         <span id="email-help" className="help">
@@ -179,26 +230,54 @@ export function SubmitForm({ prefill = {} }: { prefill?: Prefill }) {
       {/* Honeypot: hidden from people and screen readers. */}
       <div className="hp" aria-hidden="true">
         <label htmlFor="website">Website</label>
-        <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+        <input
+          id="website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
       </div>
 
-      {SITE_KEY ? (
-        <div ref={captchaRef} className="cf-turnstile" data-sitekey={SITE_KEY} data-theme="light" />
-      ) : process.env.NODE_ENV === "production" ? (
-        <p className="form-error">The CAPTCHA isn’t set up yet, so submissions can’t be sent right now.</p>
+      {siteKey ? (
+        <div
+          ref={captchaRef}
+          className="cf-turnstile"
+          data-sitekey={siteKey}
+          data-theme="light"
+        />
+      ) : placeholder ? null : process.env.NODE_ENV === "production" ? (
+        <p className="form-error">
+          The CAPTCHA isn’t set up yet, so submissions can’t be sent right now.
+        </p>
       ) : (
-        <p className="small muted">CAPTCHA is off: no Turnstile site key is set (fine for local development).</p>
+        <p className="small muted">
+          CAPTCHA is off: no Turnstile site key is set (fine for local
+          development).
+        </p>
       )}
 
       <div className="field">
         <label className="check" style={{ fontWeight: 400 }}>
-          <input type="checkbox" name="consent" value="yes" {...fieldProps("consent")} />
-          <span>I agree my submission may be edited and published on this site.</span>
+          <input
+            type="checkbox"
+            name="consent"
+            value="yes"
+            {...fieldProps("consent")}
+          />
+          <span>
+            I agree my submission may be edited and published on this site.
+          </span>
         </label>
         {errorText("consent")}
       </div>
 
-      <button type="submit" className="btn" disabled={pending} style={{ alignSelf: "flex-start" }}>
+      <button
+        type="submit"
+        className="btn"
+        disabled={pending}
+        style={{ alignSelf: "flex-start" }}
+      >
         {pending ? "Sending…" : "Send for review"}
       </button>
     </form>

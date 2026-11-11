@@ -20,7 +20,12 @@ export type SubmitValues = {
 export type SubmitState =
   | { status: "idle" }
   | { status: "success" }
-  | { status: "error"; message: string; fieldErrors: Partial<Record<keyof SubmitValues | "consent", string>>; values: SubmitValues };
+  | {
+      status: "error";
+      message: string;
+      fieldErrors: Partial<Record<keyof SubmitValues | "consent", string>>;
+      values: SubmitValues;
+    };
 
 const LIMITS: Record<keyof SubmitValues, number> = {
   quote: 1000,
@@ -40,7 +45,10 @@ function text(formData: FormData, name: string) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-export async function submitMisquote(_prev: SubmitState, formData: FormData): Promise<SubmitState> {
+export async function submitMisquote(
+  _prev: SubmitState,
+  formData: FormData,
+): Promise<SubmitState> {
   // 1. Honeypot. People never see this field; bots fill it in. Pretend it worked.
   if (text(formData, "website")) return { status: "success" };
 
@@ -57,30 +65,53 @@ export async function submitMisquote(_prev: SubmitState, formData: FormData): Pr
   const correction = text(formData, "correction").slice(0, 200);
 
   // 2. Validate.
-  const fieldErrors: Extract<SubmitState, { status: "error" }>["fieldErrors"] = {};
+  const fieldErrors: Extract<SubmitState, { status: "error" }>["fieldErrors"] =
+    {};
   if (!values.quote) fieldErrors.quote = "Add the quote as you’ve seen it.";
-  if (!values.creditedTo) fieldErrors.creditedTo = "Who is it usually credited to?";
-  if (!values.evidence) fieldErrors.evidence = "Add a link or citation. Submissions without a source can’t be checked.";
-  if (values.seenAt && !/^https?:\/\/\S+$/i.test(values.seenAt)) fieldErrors.seenAt = "This should be a web address starting with http.";
-  if (values.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) fieldErrors.email = "That email doesn’t look right.";
-  if (formData.get("consent") !== "yes") fieldErrors.consent = "Please confirm you’re OK with your submission being published.";
-  for (const [key, max] of Object.entries(LIMITS) as [keyof SubmitValues, number][]) {
-    if (values[key].length > max) fieldErrors[key] = `Please keep this under ${max} characters.`;
+  if (!values.creditedTo)
+    fieldErrors.creditedTo = "Who is it usually credited to?";
+  if (!values.evidence)
+    fieldErrors.evidence =
+      "Add a link or citation. Submissions without a source can’t be checked.";
+  if (values.seenAt && !/^https?:\/\/\S+$/i.test(values.seenAt))
+    fieldErrors.seenAt = "This should be a web address starting with http.";
+  if (values.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email))
+    fieldErrors.email = "That email doesn’t look right.";
+  if (formData.get("consent") !== "yes")
+    fieldErrors.consent =
+      "Please confirm you’re OK with your submission being published.";
+  for (const [key, max] of Object.entries(LIMITS) as [
+    keyof SubmitValues,
+    number,
+  ][]) {
+    if (values[key].length > max)
+      fieldErrors[key] = `Please keep this under ${max} characters.`;
   }
   if (Object.keys(fieldErrors).length > 0) {
-    return { status: "error", message: "Please fix the highlighted fields.", fieldErrors, values };
+    return {
+      status: "error",
+      message: "Please fix the highlighted fields.",
+      fieldErrors,
+      values,
+    };
   }
 
   // 3. CAPTCHA, checked on the server.
   const requestHeaders = await headers();
   const ip =
-    requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() || requestHeaders.get("x-real-ip") || "unknown";
+    requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    requestHeaders.get("x-real-ip") ||
+    "unknown";
 
-  const captchaOk = await verifyTurnstile(text(formData, "cf-turnstile-response"), ip);
+  const captchaOk = await verifyTurnstile(
+    text(formData, "cf-turnstile-response"),
+    ip,
+  );
   if (!captchaOk) {
     return {
       status: "error",
-      message: "We couldn’t confirm you’re not a bot. Please complete the check and try again.",
+      message:
+        "We couldn’t confirm you’re not a bot. Please complete the check and try again.",
       fieldErrors: {},
       values,
     };
@@ -98,14 +129,17 @@ export async function submitMisquote(_prev: SubmitState, formData: FormData): Pr
   if (recent >= MAX_PER_HOUR) {
     return {
       status: "error",
-      message: "You’ve sent a lot of submissions in the last hour. Please try again later.",
+      message:
+        "You’ve sent a lot of submissions in the last hour. Please try again later.",
       fieldErrors: {},
       values,
     };
   }
 
   // 5. Save as pending. Nothing is published until it's reviewed.
-  const notes = correction ? `Correction for /q/${correction}\n\n${values.notes}`.trim() : values.notes;
+  const notes = correction
+    ? `Correction for /q/${correction}\n\n${values.notes}`.trim()
+    : values.notes;
   const [saved] = await sql<{ id: number }[]>`
     insert into submissions ${sql({
       quote: values.quote,
@@ -138,21 +172,37 @@ async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
     return true; // Local development without CAPTCHA keys.
   }
   if (!token) {
-    // The widget never produced a token: usually NEXT_PUBLIC_TURNSTILE_SITE_KEY is missing from this build.
-    console.error("Turnstile: no token in the submission. Is NEXT_PUBLIC_TURNSTILE_SITE_KEY set, and was the site redeployed after?");
+    // The widget never produced a token: usually TURNSTILE_SITE_KEY is missing from this deploy.
+    console.error(
+      "Turnstile: no token in the submission. Is TURNSTILE_SITE_KEY set, and was the site redeployed after?",
+    );
     return false;
   }
 
   try {
-    const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      method: "POST",
-      body: new URLSearchParams({ secret, response: token, ...(ip !== "unknown" ? { remoteip: ip } : {}) }),
-      signal: AbortSignal.timeout(8000),
-    });
-    const data = (await res.json()) as { success?: boolean; "error-codes"?: string[]; hostname?: string };
+    const res = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        body: new URLSearchParams({
+          secret,
+          response: token,
+          ...(ip !== "unknown" ? { remoteip: ip } : {}),
+        }),
+        signal: AbortSignal.timeout(8000),
+      },
+    );
+    const data = (await res.json()) as {
+      success?: boolean;
+      "error-codes"?: string[];
+      hostname?: string;
+    };
     if (data.success !== true) {
       // See https://developers.cloudflare.com/turnstile/get-started/server-side-validation/ for what each code means.
-      console.error("Turnstile rejected the token", { errors: data["error-codes"], hostname: data.hostname });
+      console.error("Turnstile rejected the token", {
+        errors: data["error-codes"],
+        hostname: data.hostname,
+      });
     }
     return data.success === true;
   } catch (err) {
