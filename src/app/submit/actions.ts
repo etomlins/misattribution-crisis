@@ -128,7 +128,7 @@ export async function submitMisquote(_prev: SubmitState, formData: FormData): Pr
 }
 
 async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
-  const secret = process.env.TURNSTILE_SECRET_KEY;
+  const secret = process.env.TURNSTILE_SECRET_KEY?.trim();
   if (!secret) {
     if (process.env.NODE_ENV === "production") {
       // Fail closed: never accept unchecked submissions on the live site.
@@ -137,7 +137,11 @@ async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
     }
     return true; // Local development without CAPTCHA keys.
   }
-  if (!token) return false;
+  if (!token) {
+    // The widget never produced a token: usually NEXT_PUBLIC_TURNSTILE_SITE_KEY is missing from this build.
+    console.error("Turnstile: no token in the submission. Is NEXT_PUBLIC_TURNSTILE_SITE_KEY set, and was the site redeployed after?");
+    return false;
+  }
 
   try {
     const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
@@ -145,7 +149,11 @@ async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
       body: new URLSearchParams({ secret, response: token, ...(ip !== "unknown" ? { remoteip: ip } : {}) }),
       signal: AbortSignal.timeout(8000),
     });
-    const data = (await res.json()) as { success?: boolean };
+    const data = (await res.json()) as { success?: boolean; "error-codes"?: string[]; hostname?: string };
+    if (data.success !== true) {
+      // See https://developers.cloudflare.com/turnstile/get-started/server-side-validation/ for what each code means.
+      console.error("Turnstile rejected the token", { errors: data["error-codes"], hostname: data.hostname });
+    }
     return data.success === true;
   } catch (err) {
     console.error("Turnstile verification failed", err);

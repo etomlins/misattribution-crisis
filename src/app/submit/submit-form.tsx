@@ -11,7 +11,7 @@ declare global {
   }
 }
 
-const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
 
 type Prefill = { quote?: string; creditedTo?: string; correction?: string };
 
@@ -184,9 +184,11 @@ export function SubmitForm({ prefill = {} }: { prefill?: Prefill }) {
 
       {SITE_KEY ? (
         <div ref={captchaRef} className="cf-turnstile" data-sitekey={SITE_KEY} data-theme="light" />
-      ) : process.env.NODE_ENV !== "production" ? (
+      ) : process.env.NODE_ENV === "production" ? (
+        <p className="form-error">The CAPTCHA isn’t set up yet, so submissions can’t be sent right now.</p>
+      ) : (
         <p className="small muted">CAPTCHA is off: no Turnstile site key is set (fine for local development).</p>
-      ) : null}
+      )}
 
       <div className="field">
         <label className="check" style={{ fontWeight: 400 }}>
