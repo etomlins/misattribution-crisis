@@ -1,43 +1,54 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { EntryList, SubmitCallout } from "@/components/entry-parts";
 import { getLatestEntries, getPeople } from "@/lib/data";
+import twain from "../../public/mark-twain.png";
 
 export default function HomePage() {
   return (
     <div className="wrap page" style={{ gap: 56 }}>
-      <section className="stack gap-20">
-        <h1 className="title title-lg">Did they really say that?</h1>
-        <p className="lede">
-          In the information age, truth should be easier to access than ever.
-          However, humanity’s most beloved quotables are being misattributed
-          daily. If we are not scrupulous about the trivialities of history, we
-          cannot possibly derive generalizations about continuity and change
-          over time.
-        </p>
-        <p className="lede">
-          Please help confront the misattribution crisis by submitting misquotes{" "}
-          <Link href="/submit">here</Link>.
-        </p>
-        <form
-          action="/search"
-          role="search"
-          className="search-bar"
-          style={{ maxWidth: 720 }}
-        >
-          <label htmlFor="home-q" className="visually-hidden">
-            Search quotes
-          </label>
-          <input
-            id="home-q"
-            name="q"
-            type="search"
-            placeholder="Search a quote or a name…"
-          />
-          <button type="submit" className="btn">
-            Search
-          </button>
-        </form>
+      <section className="hero">
+        <div className="stack gap-20 hero-text">
+          <h1 className="title title-lg">Did they really say that?</h1>
+          <p className="lede">
+            In the information age, truth should be easier to access than ever.
+            However, humanity’s most beloved quotables are being misattributed
+            daily. If we are not scrupulous about the trivialities of history,
+            we cannot possibly derive generalizations about continuity and
+            change over time.
+          </p>
+          <p className="lede">
+            Please help confront the misattribution crisis by submitting
+            misquotes <Link href="/submit">here</Link>.
+          </p>
+          <form
+            action="/search"
+            role="search"
+            className="search-bar"
+            style={{ maxWidth: 720 }}
+          >
+            <label htmlFor="home-q" className="visually-hidden">
+              Search quotes
+            </label>
+            <input
+              id="home-q"
+              name="q"
+              type="search"
+              placeholder="Search a quote or a name…"
+            />
+            <button type="submit" className="btn">
+              Search
+            </button>
+          </form>
+        </div>
+        {/* Mark Twain, the most misquoted man on the site, keeping an eye on things. */}
+        <Image
+          src={twain}
+          alt="Mark Twain"
+          className="hero-overseer"
+          priority
+        />
       </section>
 
       <section className="stack gap-16" aria-labelledby="most-misquoted">

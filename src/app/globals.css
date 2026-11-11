@@ -85,6 +85,12 @@ p { margin: 0; }
 
 .title { font-family: var(--serif); font-weight: 700; font-size: 40px; line-height: 1.15; }
 .title-lg { font-size: 44px; }
+
+/* Homepage hero: text on the left, Mark Twain overseeing from the right. */
+.hero { display: flex; align-items: flex-end; gap: 40px; }
+.hero-text { flex: 1 1 auto; min-width: 0; }
+.hero-overseer { flex: 0 0 auto; width: 250px; height: auto; margin-bottom: -1px; }
+@media (max-width: 860px) { .hero-overseer { display: none; } }
 .heading { font-family: var(--serif); font-weight: 400; font-size: 26px; line-height: 1.25; }
 .lede { font-size: 18px; color: var(--ink-2); max-width: 720px; }
 .body { font-size: 17px; line-height: 1.7; }
