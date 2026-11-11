@@ -9,14 +9,31 @@ export default function HomePage() {
       <section className="stack gap-20">
         <h1 className="title title-lg">Did they really say that?</h1>
         <p className="lede">
-          Our great thinkers are being remembered for lines that never crossed their minds. This is a running log of
-          misattributed quotes: who gets the credit, who actually said it, and the sources to prove it.
+          In the information age, truth should be easier to access than ever.
+          However, humanity’s most beloved quotables are being misattributed
+          daily. If we are not scrupulous about the trivialities of history, we
+          cannot possibly derive generalizations about continuity and change
+          over time.
         </p>
-        <form action="/search" role="search" className="search-bar" style={{ maxWidth: 720 }}>
+        <p className="lede">
+          Help set the record straight. If you come across a quote that doesn’t
+          hold up, <Link href="/submit">send it in with your source</Link>.
+        </p>
+        <form
+          action="/search"
+          role="search"
+          className="search-bar"
+          style={{ maxWidth: 720 }}
+        >
           <label htmlFor="home-q" className="visually-hidden">
             Search quotes
           </label>
-          <input id="home-q" name="q" type="search" placeholder="Search a quote or a name…" />
+          <input
+            id="home-q"
+            name="q"
+            type="search"
+            placeholder="Search a quote or a name…"
+          />
           <button type="submit" className="btn">
             Search
           </button>
@@ -67,6 +84,7 @@ async function MostMisquoted() {
 
 async function Latest() {
   const entries = await getLatestEntries(5);
-  if (entries.length === 0) return <p className="muted">No entries published yet.</p>;
+  if (entries.length === 0)
+    return <p className="muted">No entries published yet.</p>;
   return <EntryList entries={entries} />;
 }
