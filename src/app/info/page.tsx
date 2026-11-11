@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BLOG_URL, CONTACT_EMAIL } from "@/lib/site";
+import { CONTACT_EMAIL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Info",
@@ -23,9 +23,6 @@ export default function InfoPage() {
         <p style={{ fontFamily: "var(--serif)", fontSize: 20, lineHeight: 1.5 }}>
           We are losing grasp of history; the more research I conduct, the more I find that our belief structures are
           built on cornerstones of sand. Stay sharp. Good luck and Godspeed.
-        </p>
-        <p className="muted">
-          This site started as a running log on my blog, <a href={BLOG_URL}>the life and times of ellen</a>.
         </p>
       </section>
 
