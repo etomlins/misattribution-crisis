@@ -3,8 +3,11 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import postgres from "postgres";
-import { seedEntries } from "../db/seed-data.ts";
+import { logAdditions } from "../db/log-additions.ts";
+import { seedEntries as mainLog } from "../db/seed-data.ts";
 import { slugify } from "../src/lib/slug.ts";
+
+const seedEntries = [...mainLog, ...logAdditions];
 
 export async function setupDatabase(databaseUrl: string) {
   const isLocal = /@(localhost|127\.0\.0\.1)[:/]/.test(databaseUrl);

@@ -123,6 +123,7 @@ Run them in order; each one expects the ones before it.
 
 - `001-remove-borrowed-verdict.sql`: removes the Borrowed verdict and moves the Newton entry to Accurate.
 - `002-add-contested-verdict.sql`: adds the Contested verdict and moves "God helps those who help themselves" and Newton's "shoulders of giants" into it.
+- `003-add-remaining-log-quotes.sql`: adds the rest of the original log (the “Surprisingly Real Quotes”, both case studies and three Andy Warhol quotes) as 52 drafts. Safe to run twice.
 
 ---
 
